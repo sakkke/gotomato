@@ -57,16 +57,18 @@ func getAlarmFile() string {
 
 func play(audio_file string) {
 	var name string
+	var cmd *exec.Cmd
 
 	switch runtime.GOOS {
 	case "linux":
 		name = "/mnt/c/Program Files/VideoLAN/VLC/vlc.exe"
+		cmd = exec.Command(name, "--play-and-exit", "-I", "dummy", audio_file)
 
 	case "windows":
-		name = `C:\Program Files\VideoLAN\VLC\vlc.exe`
+		name = "powershell.exe"
+		cmd = exec.Command(name, "-Command", "& {(New-Object", "Media.SoundPlayer", audio_file, ").PlaySync()}")
 	}
 
-	cmd := exec.Command(name, "--play-and-exit", "-I", "dummy", audio_file)
 	cmd.Start()
 }
 
