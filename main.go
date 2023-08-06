@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os/exec"
+	"runtime"
 	"time"
 )
 
@@ -55,7 +56,16 @@ func getAlarmFile() string {
 }
 
 func play(audio_file string) {
-	name := "/mnt/c/Program Files/VideoLAN/VLC/vlc.exe"
+	var name string
+
+	switch runtime.GOOS {
+	case "linux":
+		name = "/mnt/c/Program Files/VideoLAN/VLC/vlc.exe"
+
+	case "windows":
+		name = `C:\Program Files\VideoLAN\VLC\vlc.exe`
+	}
+
 	cmd := exec.Command(name, "--play-and-exit", "-I", "dummy", audio_file)
 	cmd.Start()
 }
